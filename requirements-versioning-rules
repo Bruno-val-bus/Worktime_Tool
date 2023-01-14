@@ -1,0 +1,5 @@
+https://nvie.com/posts/better-package-management/#virtue-2-have-your-envs-reflect-your-specs
+Avoid second level dependencies problems as a result from first level dependencies not pinning their second level dependencies.
+E.g. When second-level-dependency-version-ranges of one first level dependency conflict with version-ranges of another first level dependency instead of a specific version (<= instead of ==)
+    Use pip-tools (https://github.com/jazzband/pip-tools) to generate requirements.in file for you (pip-tools allow you to create a file with just top-level dependencies)
+    Then when pip-compile is run, pip-tools creates your requirements.txt for you with all of version compatible second-level dependencies.

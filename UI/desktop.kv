@@ -1,0 +1,42 @@
+# .kv file of the start_menu.py code
+
+# Declare the class we will be adding widgets to.
+<StartMenuGrid>:
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+        GridLayout:
+            cols:2
+            Label:
+                text: "Task: "
+            TextInput:
+                id: task_input
+                multinline:False
+                disabled: True
+            Label:
+                text: "Subtask: "
+            TextInput:
+                id: subtask_input
+                multiline:False
+                disabled: True
+
+        Button:
+            id: start_timer_button
+            text:"Start timer"
+            on_press: root.start_timer_btn(stop_timer_button, start_timer_button, time_task_button, task_input, subtask_input, print_time_button) # or app.start_timer_btn()
+        Button:
+            id: stop_timer_button
+            text:"Stop timer"
+            disabled: True
+            on_press: root.stop_timer_btn(start_timer_button, stop_timer_button, time_task_button, task_input, subtask_input, print_time_button)
+        Button:
+            id: time_task_button
+            text:"Save task time"
+            disabled: True
+            on_press: root.time_task_btn(task_input, subtask_input)
+        Button:
+            id: print_time_button
+            text:"Print time"
+            disabled: True
+            on_press: root.print_time()
+
