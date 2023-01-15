@@ -2,6 +2,30 @@
 
 # Declare the class we will be adding widgets to.
 <StartMenuGrid>:
+    cols:2
+    GridLayout:
+        cols:1
+        GridLayout:
+            cols:2
+            size_hint: 0.05, 0.05
+            Button:
+                id: add_todo_button
+                text:"Add TODO"
+                on_press: root.add2selected_node()
+            TextInput:
+                id: todo_input
+                multinline:False
+        GridLayout:
+            cols:1
+            size_hint: 0.05, 0.05
+            Button:
+                id: remove_todo_button
+                text:"Remove TODO"
+                on_press: root.remove_selected_node()
+        TreeView:
+            id: todo_tree
+            #size_hint: 2.5, 2.5
+            pos_hint: {'center_x': .5, 'center_y': .5}
     GridLayout:
         cols:1
         size: root.width, root.height
