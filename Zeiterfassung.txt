@@ -1,0 +1,36 @@
+10/07/2022
+14:50:00-14:50:00 (18sec) mapping tool lyondell 
+
+14:50:00-14:50:00 (17sec) Daily 
+
+14:51:00-14:51:00 (18sec) mapping tool lyondell 
+
+15:20:00-15:42:00 (197423.38hr) mapping tool task 1 
+
+15:20:00-15:51:00 (31.48min) mapping tool 
+
+15:20:00-15:52:00 (32.99min) amar a mi schnipi darle besos spagnola 
+
+25.09.2022
+11:59:00-08:30:00 : task 1 topic 1 
+08:30:00-09:00:00 : Regeltermin Norbert/Matti
+09:00:00-09:00:00 : task 1 topic 1 
+09:00:00-09:30:00 : Daily
+09:30:00-12:00:00 : task 1 topic 1 
+Total time spend: 8sec
+
+14:28:00-08:30:00 : task1 topic 1 
+08:30:00-09:00:00 : Regeltermin Norbert/Matti
+09:00:00-09:00:00 : task1 topic 1 
+09:00:00-09:30:00 : Daily
+09:30:00-14:28:00 : task1 topic 1 
+Total time spend: 9sec
+
+14:49:00-14:50:00 : task treballar 
+Total time spend: 13sec 
+
+15:50:00-15:50:00 : task 1 topic schnipi 
+Total time spend: 12sec
+
+<module 'ntpath' from 'C:\\Users\\bruno\\AppData\\Local\\Programs\\Python\\Python310\\lib\\ntpath.py'>
+<module 'ntpath' from 'C:\\Users\\bruno\\AppData\\Local\\Programs\\Python\\Python310\\lib\\ntpath.py'>

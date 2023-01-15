@@ -39,6 +39,7 @@ class TaskTime:
     def insert_node(self):
         pass
 
+
 class TimeManager:
 
     def __init__(self):
@@ -88,6 +89,7 @@ class TimeManager:
         :return:
         """
         pass
+
     @staticmethod
     def __get_time_as_str(elapsed_time_sec) -> str:
         if elapsed_time_sec < 60:
@@ -99,6 +101,7 @@ class TimeManager:
         elif elapsed_time_sec >= 3600:
             # return in hours
             return str(round(elapsed_time_sec / 3600, 2)) + "hr"
+
 
 def start_timer():
     global last_session_text
@@ -120,13 +123,14 @@ def start_timer():
                 print('Current time spent in task ' + get_time_as_str(time.time() - global_starting_time))
             continue
 
-
     print('Do you want to input starting time manually (H:M)?')
     manual_input_starting_time = input()
     if ":" in manual_input_starting_time:
         global_starting_time_str = manual_input_starting_time + ":00"
         # get struct_time tuple with time.strptime() and pass as param in time.mktime() to convert to seconds (float)
-        global_starting_time = time.mktime(time.strptime(global_starting_time_str + "-" + time.strftime(date_format, time.localtime()), "%H:%M:%S" + "-" + date_format))  # default year of 1900 is to early to convert, input 2000 instead
+        global_starting_time = time.mktime(
+            time.strptime(global_starting_time_str + "-" + time.strftime(date_format, time.localtime()),
+                          "%H:%M:%S" + "-" + date_format))  # default year of 1900 is to early to convert, input 2000 instead
 
     global_ending_time = time.localtime()
     global_ending_time_str = time.strftime("%H:%M", global_ending_time) + ":00"
@@ -174,7 +178,8 @@ def start_timer():
     if input_end_time != '':
         daily_end_time = input_end_time + ':00'
 
-    time_spend_in_internal_appointment = get_elapsed_time_from_str(internal_appointment_starting_time, internal_appointment_end_time)
+    time_spend_in_internal_appointment = get_elapsed_time_from_str(internal_appointment_starting_time,
+                                                                   internal_appointment_end_time)
     time_spend_in_daily = get_time_as_str(get_elapsed_time_from_str(daily_starting_time, daily_end_time))
 
     morning_period = False
@@ -190,8 +195,10 @@ def start_timer():
         text_file_lines.append("Total time spend: " + time_spend_in_task)
     elif time_spend_in_daily == 0 and morning_period:
         # no daily appointment conducted
-        text_file_lines.append(global_starting_time_str + '-' + internal_appointment_starting_time + ' : ' + text_to_write)
-        text_file_lines.append(internal_appointment_starting_time + '-' + internal_appointment_end_time + ' : ' + "Regeltermin Norbert/Matti")
+        text_file_lines.append(
+            global_starting_time_str + '-' + internal_appointment_starting_time + ' : ' + text_to_write)
+        text_file_lines.append(
+            internal_appointment_starting_time + '-' + internal_appointment_end_time + ' : ' + "Regeltermin Norbert/Matti")
         text_file_lines.append(internal_appointment_end_time + '-' + global_ending_time_str + ' : ' + text_to_write)
         text_file_lines.append("Total time spend: " + time_spend_in_task)
     elif (time_spend_in_internal_appointment == 0 and time_spend_in_daily == 0) or not morning_period:
@@ -200,8 +207,10 @@ def start_timer():
         text_file_lines.append("Total time spend: " + time_spend_in_task)
     else:
         # internal and daily appointment conducted
-        text_file_lines.append(global_starting_time_str + '-' + internal_appointment_starting_time + ' : ' + text_to_write)
-        text_file_lines.append(internal_appointment_starting_time + '-' + internal_appointment_end_time + ' : ' + "Regeltermin Norbert/Matti")
+        text_file_lines.append(
+            global_starting_time_str + '-' + internal_appointment_starting_time + ' : ' + text_to_write)
+        text_file_lines.append(
+            internal_appointment_starting_time + '-' + internal_appointment_end_time + ' : ' + "Regeltermin Norbert/Matti")
         text_file_lines.append(internal_appointment_end_time + '-' + daily_starting_time + ' : ' + text_to_write)
         text_file_lines.append(daily_starting_time + '-' + daily_end_time + ' : ' + "Daily")
         text_file_lines.append(daily_end_time + '-' + global_ending_time_str + ' : ' + text_to_write)
@@ -244,10 +253,11 @@ def get_time_as_str(elapsed_time_sec):
         return str(round(elapsed_time_sec)) + "sec"
     elif 60 <= elapsed_time_sec < 3600:
         # return in minutes
-        return str(round(elapsed_time_sec/60.0, 2)) + "min"
+        return str(round(elapsed_time_sec / 60.0, 2)) + "min"
     elif elapsed_time_sec >= 3600:
         # return in hours
-        return str(round(elapsed_time_sec/3600, 2)) + "hr"
+        return str(round(elapsed_time_sec / 3600, 2)) + "hr"
+
 
 def get_elapsed_time_from_str(start_time_str, end_time_str):
     '''
@@ -262,6 +272,7 @@ def get_elapsed_time_from_str(start_time_str, end_time_str):
     end_time = int(h) * 3600 + int(m) * 60 + int(s)
     return end_time - start_time
 
+
 def monitor_open_apps():
     """
     TODO Monitors open apps and closes if currently in deep work session: https://stackoverflow.com/questions/7787120/check-if-a-process-is-running-or-not-on-windows . If deep work session is over, programm can be opened again
@@ -269,8 +280,9 @@ def monitor_open_apps():
     :return:
     """
     for p in psutil.process_iter():
-        p.name() # .exe string
+        p.name()  # .exe string
         p.name()
+
 
 if __name__ == "__main__":
     monitor_open_apps()

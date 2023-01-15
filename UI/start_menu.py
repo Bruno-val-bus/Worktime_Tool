@@ -1,16 +1,10 @@
-import kivy
-from kivy.metrics import dp
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.checkbox import CheckBox
-from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.app import App
-from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.treeview import TreeView, TreeViewNode, TreeViewLabel
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
-import Time_tool
+from time_management import Time_tool
 
 
 class MyTreeView(TreeView):
@@ -38,7 +32,7 @@ class TreeNodeInput(BoxLayout, TreeViewNode):
 
 class StartMenuGrid(GridLayout):
     """"
-    build with kv file: https://www.techwithtim.net/tutorials/kivy-tutorial/multiple-screens/
+    build multiscreens with kv file: https://www.techwithtim.net/tutorials/kivy-tutorial/multiple-screens/
     TODO write necessary files to deploy app in other servers: nice workflow in requirements-versioning-rule file and in https://suyojtamrakar.medium.com/managing-your-requirements-txt-with-pip-tools-in-python-8d07d9dfa464
         you might need to first migrate to venv
     """
@@ -52,10 +46,18 @@ class StartMenuGrid(GridLayout):
         self.tree_view_widget.add_node(TreeViewLabel(text="TODO 2"))
         self.tree_view_widget.add_node(TreeViewLabel(text="TODO 3"))
 
+    def add_todo2task(self):
+        task_input = self.ids.task_input
+        task_input.disabled = False
+        selected_node = self.tree_view_widget.selected_node
+        if selected_node:
+            task_input.text = selected_node.text
+        else:
+            print("Please select a TODO to add to task")
+
     def add2selected_node(self):
         selected_node = self.tree_view_widget.selected_node
         current_input = self.ids.todo_input.text
-        print(selected_node)
         if selected_node:
             new_tree_label = TreeViewLabel(text=current_input)
             self.tree_view_widget.add_node(new_tree_label, selected_node)
@@ -77,6 +79,8 @@ class StartMenuGrid(GridLayout):
         task_input.disabled = False
         subtask_input.disabled = False
         print_time_button.disabled = False
+        # just another way to call widget id's instead of passing them to the method in the kv file
+        self.ids.add_todo2task_button.disabled = False
         self.time_manager.save_starting_time()
         print("Timer started")
 
@@ -88,6 +92,8 @@ class StartMenuGrid(GridLayout):
         task_input.disabled = True
         subtask_input.disabled = True
         print_time_button.disabled = True
+        # just another way to call widget id's instead of passing them to the method in the kv file
+        self.ids.add_todo2task_button.disabled = True
         self.time_manager.save_ending_time()
         total_elapsed_time = self.time_manager.get_total_elapsed_time()
         print(f"Timer stopped. You worked {total_elapsed_time} today")

@@ -49,6 +49,11 @@
             text:"Start timer"
             on_press: root.start_timer_btn(stop_timer_button, start_timer_button, time_task_button, task_input, subtask_input, print_time_button) # or app.start_timer_btn()
         Button:
+            id: add_todo2task_button
+            text:"Add TODO to task"
+            disabled: True
+            on_press: root.add_todo2task()
+        Button:
             id: stop_timer_button
             text:"Stop timer"
             disabled: True
