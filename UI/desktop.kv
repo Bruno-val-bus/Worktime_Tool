@@ -43,7 +43,18 @@
                 id: subtask_input
                 multiline:False
                 disabled: True
-
+        GridLayout:
+            cols:2
+            Label:
+                text: "Daily"
+            Switch:
+                id: switch_daily
+                active: True
+            Label:
+                text: "Regeltermin"
+            Switch:
+                id: switch_regeltermin
+                active: True
         Button:
             id: start_timer_button
             text:"Start timer"

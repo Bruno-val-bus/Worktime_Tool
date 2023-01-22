@@ -31,7 +31,7 @@ class TaskTime:
             node = node.next_time
         node.next_time = new_node
 
-    def get_tail(self):
+    def get_tail(self) -> 'TaskTime':
         node = self
         while True:
             if node.next_time is None:
@@ -39,8 +39,40 @@ class TaskTime:
             node = node.next_time
         return node
 
-    def insert_node(self):
-        pass
+    def insert_by_epoch_order(self, node2insert: 'TaskTime') -> 'TaskTime':
+        """
+        Inserts new node in order dependent of epoch
+        :param node2insert:
+        :return: node after which new node was inserted. None if no insertion was done
+        """
+        node = self
+        new_node_epoch = node2insert.time_epoch
+        while True:
+            next_node = node.next_time
+            if next_node is None:
+                break
+            current_node_epoch = node.time_epoch
+            if next_node.time_epoch > new_node_epoch > current_node_epoch:
+                # if new node has not been defined a task, use last task
+                if node2insert.task is None:
+                    node2insert.task = node.task
+                # insert new 'node' between node and 'next_node'
+                node.next_time = node2insert
+                node2insert.next_time = next_node
+                return node
+            node = node.next_time
+        return node
+
+    def insert_node_at(self, node2insert: 'TaskTime'):
+        """
+        Inserts node after current node object
+        :param node2insert:
+        :return:
+        """
+        current_node = self
+        next_node = self.next_time
+        current_node.next_time = node2insert
+        node2insert.next_time = next_node
 
 
 class TimeManager:
@@ -52,6 +84,49 @@ class TimeManager:
         self.ending_time_local: str
         self.head_task = TaskTime()
         self.writer = TimeWriter()
+        self.add_daily_task: bool = True
+
+    def add_node2head(self, start_time: str, end_time: str, task: str, subtask: str = ""):
+        """
+        Adds node 'TaskTime' object to head's 'TaskTime' Object
+        :param start_time: start time of task format '15:43:00'
+        :param end_time: start time of task format '15:44:00'
+        :param task:
+        :param subtask:
+        :return:
+        """
+        # define node with extra task
+        node_start_epoch_time = self._convert_str_time2epoch(start_time)
+        node = TaskTime()
+        node.task = task
+        node.subtask = subtask
+        node.time_epoch = node_start_epoch_time
+        node.time_local = start_time
+        # add daily node
+        node_before_daily = self.head_task.insert_by_epoch_order(node)
+
+        # define intermediary node
+        node_end_epoch_time = self._convert_str_time2epoch(end_time)
+        # define daily node
+        intermediary_node = TaskTime()
+        intermediary_node.task = node_before_daily.task
+        intermediary_node.subtask = ""
+        intermediary_node.time_epoch = node_end_epoch_time
+        intermediary_node.time_local = end_time
+        # add intermediary node
+        node.insert_node_at(intermediary_node)
+
+    @staticmethod
+    def _convert_str_time2epoch(time_as_str: str) -> float:
+        # String time to convert
+        date_today = time.strftime(date_format, time.localtime())
+        string_time = f"{date_today} {time_as_str}"  # e.g.: "2022.05.18 15:30:00"
+        string_format = f"{date_format} {hour_format}"
+        # Convert the string time to a datetime object
+        datetime_time = datetime.strptime(string_time, string_format)
+        # Convert the datetime object to an epoch timestamp
+        epoch_time = time.mktime(datetime_time.timetuple())
+        return epoch_time
 
     def save_starting_time(self):
         self.starting_time_epoch = time.time()
@@ -70,7 +145,7 @@ class TimeManager:
         tail_task = self.head_task.get_tail()
         tail_task.append(last_node)
         # write tasks
-        self.writer.write_tasks(self.head_task)
+        self.writer.write_tasks(self.head_task, self.get_total_elapsed_time())
 
     def save_task_time(self, task, subtask):
         # save task
@@ -84,7 +159,7 @@ class TimeManager:
     def get_total_elapsed_time(self) -> str:
         return get_time_as_str(self.ending_time_epoch - self.starting_time_epoch)
 
-    def get_current_elapsed_time(self):
+    def get_current_elapsed_time(self) -> str:
         reference_time = time.time()
         return get_time_as_str(reference_time - self.starting_time_epoch)
 
@@ -114,9 +189,8 @@ class TimeWriter:
     def __init__(self):
         project_path: str = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
         self._path: str = os.path.join(project_path, "Zeiterfassung.txt")
-        self._date_format: str = "%d.%m.%Y"
 
-    def write_tasks(self, head: TaskTime):
+    def write_tasks(self, head: TaskTime, elapsed_time: str):
         """
         :return:
         """
@@ -124,9 +198,10 @@ class TimeWriter:
         if os.stat(self._path).st_size == 0:
             with open(self._path, mode='w') as f:  # only write mode
                 self.__write2file(f, head)
+                f.write(f"Total: {elapsed_time}")
         else:
             new_day = True
-            date_today = time.strftime(self._date_format, time.localtime())
+            date_today = time.strftime(date_format, time.localtime())
             with open(self._path, mode='r') as f:  # only read mode
                 for existing_line in f.readlines():
                     if date_today in existing_line:  # line with date exists, it is not a new day
@@ -138,6 +213,7 @@ class TimeWriter:
                     f.write(date_today)
                     f.write('\n')
                 self.__write2file(f, head)
+                f.write(f"Total: {elapsed_time}")
 
     @staticmethod
     def __write2file(f: TextIO, head: TaskTime):

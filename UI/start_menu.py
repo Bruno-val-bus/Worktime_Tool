@@ -94,6 +94,10 @@ class StartMenuGrid(GridLayout):
         print_time_button.disabled = True
         # just another way to call widget id's instead of passing them to the method in the kv file
         self.ids.add_todo2task_button.disabled = True
+        if self.ids.switch_regeltermin.active is True:
+            self.time_manager.add_node2head("16:16:00", "16:17:00", "Regeltermin")
+        if self.ids.switch_daily.active is True:
+            self.time_manager.add_node2head("16:19:00", "16:20:00", "Daily")
         self.time_manager.save_ending_time()
         total_elapsed_time = self.time_manager.get_total_elapsed_time()
         print(f"Timer stopped. You worked {total_elapsed_time} today")
