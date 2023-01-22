@@ -32,5 +32,11 @@ Total time spend: 13sec
 15:50:00-15:50:00 : task 1 topic schnipi 
 Total time spend: 12sec
 
-<module 'ntpath' from 'C:\\Users\\bruno\\AppData\\Local\\Programs\\Python\\Python310\\lib\\ntpath.py'>
-<module 'ntpath' from 'C:\\Users\\bruno\\AppData\\Local\\Programs\\Python\\Python310\\lib\\ntpath.py'>
+22.01.202313:28:00-13:29:00 : t1  
+13:29:00-13:29:00 : 2  
+13:29:00-13:29:00 : 3  3.3
+13:29:00-13:29:00 : None  None
+
+13:37:19-13:37:27 : t1  
+13:37:27-13:37:36 : t2  
+13:37:36-13:38:09 : t3  

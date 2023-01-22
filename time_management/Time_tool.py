@@ -1,10 +1,13 @@
 import time
 import os
 from datetime import datetime
+from typing import TextIO
+
 import psutil
 
 file_path = os.getcwd() + '\\Zeiterfassung.txt'
 date_format = "%d.%m.%Y"
+hour_format = "%H:%M:%S"
 
 
 class TaskTime:
@@ -13,12 +16,12 @@ class TaskTime:
     """
 
     def __init__(self):
-        self.time_epoch = time.time()
+        self.time_epoch: float = time.time()
         local_struct = time.localtime()
-        self.time_local = time.strftime("%H:%M:00", local_struct)
-        self.task = None
-        self.subtask = None
-        self.next_time = None
+        self.time_local: str = time.strftime(hour_format, local_struct)
+        self.task: str = None
+        self.subtask: str = None
+        self.next_time: TaskTime = None
 
     def append(self, new_node):
         node = self
@@ -48,11 +51,12 @@ class TimeManager:
         self.starting_time_local: str
         self.ending_time_local: str
         self.head_task = TaskTime()
+        self.writer = TimeWriter()
 
     def save_starting_time(self):
         self.starting_time_epoch = time.time()
         starting_time_local_struct = time.localtime()
-        self.starting_time_local = time.strftime("%H:%M:00", starting_time_local_struct)
+        self.starting_time_local = time.strftime(hour_format, starting_time_local_struct)
         # save times in head of linked list
         self.head_task.time_epoch = self.starting_time_epoch
         self.head_task.time_local = self.starting_time_local
@@ -60,11 +64,13 @@ class TimeManager:
     def save_ending_time(self):
         self.ending_time_epoch = time.time()
         ending_time_local_struct = time.localtime()
-        self.ending_time_local = time.strftime("%H:%M:00", ending_time_local_struct)
+        self.ending_time_local = time.strftime(hour_format, ending_time_local_struct)
         # add last node to tail
         last_node = TaskTime()
         tail_task = self.head_task.get_tail()
         tail_task.append(last_node)
+        # write tasks
+        self.writer.write_tasks(self.head_task)
 
     def save_task_time(self, task, subtask):
         # save task
@@ -101,6 +107,49 @@ class TimeManager:
         elif elapsed_time_sec >= 3600:
             # return in hours
             return str(round(elapsed_time_sec / 3600, 2)) + "hr"
+
+
+class TimeWriter:
+
+    def __init__(self):
+        project_path: str = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+        self._path: str = os.path.join(project_path, "Zeiterfassung.txt")
+        self._date_format: str = "%d.%m.%Y"
+
+    def write_tasks(self, head: TaskTime):
+        """
+        :return:
+        """
+        # check if text file is empty
+        if os.stat(self._path).st_size == 0:
+            with open(self._path, mode='w') as f:  # only write mode
+                self.__write2file(f, head)
+        else:
+            new_day = True
+            date_today = time.strftime(self._date_format, time.localtime())
+            with open(self._path, mode='r') as f:  # only read mode
+                for existing_line in f.readlines():
+                    if date_today in existing_line:  # line with date exists, it is not a new day
+                        new_day = False
+                        break
+            with open(self._path, mode='a+') as f:  # only append mode that jumps to the end
+                f.write('\n')
+                if new_day:
+                    f.write(date_today)
+                    f.write('\n')
+                self.__write2file(f, head)
+
+    @staticmethod
+    def __write2file(f: TextIO, head: TaskTime):
+        task_time = head
+        while True:
+            next_task_time = task_time.next_time
+            if next_task_time is None or task_time.task is None:
+                break
+            text = f"{task_time.time_local}-{next_task_time.time_local} : {task_time.task}  {task_time.subtask}"
+            f.write(text)
+            f.write('\n')
+            task_time = next_task_time
 
 
 def start_timer():
