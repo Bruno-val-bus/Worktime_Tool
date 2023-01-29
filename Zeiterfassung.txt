@@ -26,7 +26,7 @@ Total time spend: 8sec
 09:30:00-14:28:00 : task1 topic 1 
 Total time spend: 9sec
 
-14:49:00-14:50:00 : task treballar 
+14:49:00-14:50:00 : task treballar
 Total time spend: 13sec 
 
 15:50:00-15:50:00 : task 1 topic schnipi 

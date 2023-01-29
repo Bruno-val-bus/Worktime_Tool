@@ -10,9 +10,9 @@ from time_management import Time_tool
 class MyTreeView(TreeView):
     def __init__(self, **kwargs):
         super(MyTreeView, self).__init__(**kwargs)
-        self.add_node(TreeViewLabel(text="Node 1"))
-        self.add_node(TreeViewLabel(text="Node 2"))
-        self.add_node(TreeViewLabel(text="Node 3"))
+        self.add_node(TreeViewLabel(text="TodoNode 1"))
+        self.add_node(TreeViewLabel(text="TodoNode 2"))
+        self.add_node(TreeViewLabel(text="TodoNode 3"))
 
 
 class TreeNode(TreeViewLabel):
@@ -41,7 +41,7 @@ class StartMenuGrid(GridLayout):
         super(StartMenuGrid, self).__init__(**kwargs)
         self.time_manager = Time_tool.TimeManager()
         self.tree_view_widget = self.ids.todo_tree
-
+        # TODO add date to todos self.tree_view_widget.text = f"TODOs {date}" date = today
         self.tree_view_widget.add_node(TreeViewLabel(text="TODO 1"))
         self.tree_view_widget.add_node(TreeViewLabel(text="TODO 2"))
         self.tree_view_widget.add_node(TreeViewLabel(text="TODO 3"))
@@ -95,9 +95,9 @@ class StartMenuGrid(GridLayout):
         # just another way to call widget id's instead of passing them to the method in the kv file
         self.ids.add_todo2task_button.disabled = True
         if self.ids.switch_regeltermin.active is True:
-            self.time_manager.add_node2head("16:16:00", "16:17:00", "Regeltermin")
+            self.time_manager.add_node2head("08:30:00", "09:00:00", "Regeltermin")
         if self.ids.switch_daily.active is True:
-            self.time_manager.add_node2head("16:19:00", "16:20:00", "Daily")
+            self.time_manager.add_node2head("09:00:00", "09:30:00", "Daily")
         self.time_manager.save_ending_time()
         total_elapsed_time = self.time_manager.get_total_elapsed_time()
         print(f"Timer stopped. You worked {total_elapsed_time} today")
