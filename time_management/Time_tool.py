@@ -42,19 +42,24 @@ class TaskTime:
     def insert_by_epoch_order(self, node2insert: 'TaskTime') -> 'TaskTime':
         """
         Inserts new node in order dependent of epoch
-        :param node2insert:
+        :param node2insert: TODO 'node2insert' has to contain intermediate node (node2insert.next_time) before function and insertion has to happen in intermediate node.
+                                This approach assumes that the ending time of 'node2insert' (or the epoch of the intermediate node) is smaller than the ending time of the next node in original linekd list
         :return: node after which new node was inserted. None if no insertion was done
         """
         node = self
         new_node_epoch = node2insert.time_epoch
         while True:
             next_node = node.next_time
-            if next_node is None:
-                break
             current_node_epoch = node.time_epoch
+            if next_node is None:
+                # TODO if next node does not exist, 'node2insert' has to be only compared with current 'node': new_node_epoch > current_node_epoch
+                # only inserted if epoch is after current 'node' epoch
+                break
+            # if next node exists, 'node2insert' has to be compared with current 'node' and with 'next_node'
             if next_node.time_epoch > new_node_epoch > current_node_epoch:
-                # if new node has not been defined a task, use last task
+                # only inserted if epoch is between current 'node' epoch and 'next_node' epoch
                 if node2insert.task is None:
+                    # if new node has not been defined a task, use last task
                     node2insert.task = node.task
                 # insert new 'node' between node and 'next_node'
                 node.next_time = node2insert
