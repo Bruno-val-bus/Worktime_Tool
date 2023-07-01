@@ -196,6 +196,7 @@ class TimeWriter:
         self._path: str = os.path.join(project_path, "Zeiterfassung.txt")
 
     def write_tasks(self, head: TaskTime, elapsed_time: str):
+        # TODO head is complete up to time that timer has ended but still does not write the last task in the Zeiterfassung file. Only before last task is written. Chech reason behind
         """
         :return:
         """
